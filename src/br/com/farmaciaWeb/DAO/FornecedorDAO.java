@@ -1,8 +1,13 @@
 package br.com.farmaciaWeb.DAO;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.PreparedStatement;
+import java.util.ArrayList;
+
+import org.omg.CORBA.PUBLIC_MEMBER;
+
 import br.com.farmaciaWeb.domain.Fornecedor;
 import br.com.farmaciaWeb.factory.ConexaoFactory;
 
@@ -66,6 +71,97 @@ public class FornecedorDAO {
 		
 	}
 	
+	public Fornecedor BuscaPorCodigo(Fornecedor f) throws SQLException{
+		
+		StringBuilder sql = new StringBuilder();
+		sql.append("SELECT CODIGO,NOME ");
+		sql.append("from fornecedores ");
+		sql.append("WHERE codigo= ? ");
+		
+		Connection conexao = ConexaoFactory.conectar();
+		PreparedStatement comando = conexao.prepareStatement(sql.toString());
+		
+		comando.setInt(1, f.getCodigo());
+		
+		
+		ResultSet resultado = comando.executeQuery();
+		Fornecedor retorno=null;
+		
+		if (resultado.next()) {
+			retorno= new Fornecedor();
+			retorno.setCodigo(resultado.getInt("codigo"));
+			retorno.setNome(resultado.getString("nome"));
+						
+		}
+		return retorno;
+	}
+	
+	public ArrayList<Fornecedor> BuscaPorNome(Fornecedor f) throws SQLException{
+		
+		StringBuilder sql = new StringBuilder();
+		sql.append("SELECT CODIGO,NOME,ENDERECO,TELEFONE ");
+		sql.append("from fornecedores ");
+		sql.append("WHERE nome LIKE  ? ");
+		sql.append("order by nome ");
+		Connection conexao = ConexaoFactory.conectar();
+		PreparedStatement comando = conexao.prepareStatement(sql.toString());
+		
+		comando.setString(1, "%"+  f.getNome() + "%");
+		
+		
+ResultSet resultado = comando.executeQuery();
+		
+		ArrayList<Fornecedor> lista = new ArrayList<Fornecedor>();
+		
+		while (resultado.next()) {
+			Fornecedor item = new Fornecedor();
+			item.setCodigo(resultado.getInt("codigo"));
+			item.setNome(resultado.getString("nome"));
+			item.setEndereco(resultado.getString("endereco"));
+			item.setTelefone(resultado.getString("telefone"));
+			
+			lista.add(item);
+			
+		}
+		return lista;
+	}
+	
+		
+				
+		//comando.executeUpdate();
+	public ArrayList<Fornecedor> listar () throws SQLException{
+		
+		StringBuilder sql = new StringBuilder();
+		sql.append("SELECT CODIGO,NOME,ENDERECO, TELEFONE ");
+		sql.append("from fornecedores ");
+		sql.append("ORDER BY NOME ASC");
+		
+		Connection conexao = ConexaoFactory.conectar();
+		PreparedStatement comando = conexao.prepareStatement(sql.toString());
+		
+		
+		
+		ResultSet resultado = comando.executeQuery();
+		
+		ArrayList<Fornecedor> lista = new ArrayList<Fornecedor>();
+		
+		while (resultado.next()) {
+			Fornecedor f = new Fornecedor();
+			f.setCodigo(resultado.getInt("codigo"));
+			f.setNome(resultado.getString("nome"));
+			f.setEndereco(resultado.getString("endereco"));
+			f.setTelefone(resultado.getString("telefone"));
+			
+			lista.add(f);
+			
+		}
+		return lista;
+		
+		
+	}
+	
+	
+	
 	
 
 	public static void main(String[] args) {
@@ -96,22 +192,87 @@ public class FornecedorDAO {
 //			e.printStackTrace();
 //		}
 
-		Fornecedor f = new Fornecedor();
-		f.setCodigo(1);
-		f.setNome("Luis fernando");
-		f.setEndereco("Rua 13 de agosto");
-		f.setTelefone("88788217");
-		FornecedorDAO fdao = new FornecedorDAO();
+//		Fornecedor f = new Fornecedor();
+//		f.setCodigo(3);
+//		f.setNome("Luis Eduardo");
+//		f.setEndereco("Rua 13 de maio");
+//		f.setTelefone("9999-9999");
+//		FornecedorDAO fdao = new FornecedorDAO();
+//		
+//		try {
+//			fdao.editar(f);
+//
+//			System.out.println("editado com Sucesso");
+//		} catch (Exception e) {
+//			System.out.println("erro ao editar");
+//			e.printStackTrace();
+//		}
+		
+//		Fornecedor f = new Fornecedor();
+//		f.setCodigo(3);
+//		f.setNome("Luis Eduardo");
+//		f.setEndereco("Rua 13 de maio");
+//		f.setTelefone("9999-9999");
+//		FornecedorDAO fdao = new FornecedorDAO();
+//		
+//		try {
+//			fdao.editar(f);
+//
+//			System.out.println("editado com Sucesso");
+//		} catch (Exception e) {
+//			System.out.println("erro ao editar");
+//			e.printStackTrace();
+//		}
+		
+		
+
+//		Fornecedor f = new Fornecedor();
+//		f.setCodigo(3);
+//		
+//		
+//		FornecedorDAO fdao = new FornecedorDAO();
+//		
+//		try {
+//			Fornecedor f1 =fdao.BuscaPorCodigo(f);
+//
+//			System.out.println("Resultado: "+f1);
+//		} catch (Exception e) {
+//			System.out.println("erro ao buscar");
+//			e.printStackTrace();
+//		}
+		
+		
+//		FornecedorDAO fdao = new FornecedorDAO();
+//		
+//		try {
+//			ArrayList<Fornecedor>lista=fdao.listar();
+//
+//			for (Fornecedor f : lista) {
+//				
+//			
+//			System.out.println("Resultado: "+f);
+//			}
+//		} catch (Exception e) {
+//			System.out.println("erro ao buscar");
+//			e.printStackTrace();
+//		}
+		
+Fornecedor f1 = new Fornecedor();
+f1.setNome("LO");
+FornecedorDAO fdao = new FornecedorDAO();
 		
 		try {
-			fdao.editar(f);
+			ArrayList<Fornecedor>lista=fdao.BuscaPorNome(f1);
 
-			System.out.println("editado com Sucesso");
+			for (Fornecedor f : lista) {
+				
+			
+			System.out.println("Resultado: "+f);
+			}
 		} catch (Exception e) {
-			System.out.println("erro ao editar");
+			System.out.println("erro ao buscar");
 			e.printStackTrace();
 		}
-		
 		
 	}
 }

@@ -32,5 +32,11 @@ public class Fornecedor {
 		this.telefone = telefone;
 	}
 	
+	@Override
+	public String toString() {
+		String saida = codigo + "-" + nome;
+		return saida;
+	}
+	
 	
 }
